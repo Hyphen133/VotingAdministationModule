@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+
+
+</head>
+<body>
+
+<form name="form1" action="#" th:action="@{/ballot}" th:object="${ballot}" method="post">
+
+    <div>
+        <p>Id : <input type="number" th:field="${ballot.id}" value=""/></p>
+        <p>Name: <input type="text" th:field="${ballot.name}" value=""/></p>
+        <p>Start Date: <input type="datetime-local" th:field="${ballot.startDate}" value=""/></p>
+        <p>End Date: <input type="datetime-local" th:field="${ballot.endDate}" value=""/></p>
+
+        <div>
+            <label>
+                Select (multiple) users
+            </label>
+        </div>
+        <select th:field="${ballot.usernames}"
+                value=""
+                multiple="multiple"
+                size="10">
+
+            <option th:each="user:${allUsers}"
+                    th:text="${user.username}"
+                    th:value="${user.username}"
+                    value="">
+            </option>
+        </select>
+
+        <br><br><br>
+
+        <div>
+            <label>
+                Select (multiple) candidates
+            </label>
+        </div>
+        <select th:field="${ballot.candidates}"
+                value=""
+                multiple="multiple"
+                size="10">
+
+            <option th:each="user:${allUsers}"
+                    th:text="${user.username}"
+                    th:value="${user.username}"
+                    value="">
+            </option>
+        </select>
+
+        <!--<input name="txtValue" type="text"/>-->
+        <!--<div>-->
+            <!--<select name="lstValue" multiple="multiple">-->
+                <!--&lt;!&ndash;<option value="empty">&ndash;&gt;-->
+            <!--</select>-->
+        <!--</div>-->
+
+        <!--<div>-->
+            <!--<script th:inline="javascript">-->
+                <!--// &lt;!&ndash;<script language="javascript" type="text/javascript">&ndash;&gt;-->
+                <!--var i = 0;-->
+
+                <!--function addValue() {-->
+                    <!--var v = document.form1.txtValue.value;-->
+
+                    <!--// var message = /*[[${ballot.usernames}]]*/ 'default';-->
+                    <!--// message.push(v)-->
+                    <!--// console.log(message);-->
+
+                    <!--// get the TextBox Value and assign it into the variable-->
+                    <!--AddOpt = new Option(v, v);-->
+                    <!--document.form1.lstValue.options[i++] = AddOpt;-->
+                    <!--document.form1.txtValue.value = "";-->
+                    <!--return true;-->
+                <!--}-->
+
+                <!--function deleteValue() {-->
+                    <!--var s = 1;-->
+                    <!--var Index;-->
+
+                    <!--if (document.form1.lstValue.selectedIndex == -1) {-->
+                        <!--alert("Please select any item from the ListBox");-->
+                        <!--return true;-->
+                    <!--}-->
+
+                    <!--while (s > 0) {-->
+                        <!--Index = document.form1.lstValue.selectedIndex;-->
+                        <!--if (Index >= 0) {-->
+                            <!--document.form1.lstValue.options[Index] = null;-->
+                            <!--&#45;&#45;i;-->
+                        <!--} else-->
+                            <!--s = 0;-->
+                    <!--}-->
+                    <!--return true;-->
+                <!--}-->
+            <!--</script>-->
+
+            <!--<input type="button" name="add" value="Add" onclick="addValue()"/>-->
+            <!--<input type="button" name="delete" value="Delete" onclick="deleteValue()"/>-->
+        </div>
+
+
+        <input type="submit" value="Submit"/>
+    </div>
+</form>
+</body>
+</html>

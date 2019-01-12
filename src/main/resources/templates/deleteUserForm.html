@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:form="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+
+<!--https://stackoverflow.com/questions/48999378/how-do-i-get-the-selected-value-from-a-drop-down-menu-with-thymeleaf-->
+
+<form action="#" th:action="@{/user/delete}" th:object="${selectedUsers}" method="post">
+    <fieldset>
+        <div>
+            <label>
+                Select (multiple) users to delete
+            </label>
+        </div>
+        <select th:field="${selectedUsers.usernames}"
+                multiple="multiple"
+                size="10">
+
+            <option th:each="user : ${users}"
+                    th:text="${user.username}"
+                    th:value="${user.username}"
+                    value="">
+            </option>
+        </select>
+
+        <div>
+            <input type="submit" value="Submit"/>
+        </div>
+    </fieldset>
+
+</form>
+
+
+</body>
+</html>

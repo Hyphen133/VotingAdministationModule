@@ -1,0 +1,22 @@
+<!--<?xml version="1.0" encoding="UTF-8"?>-->
+
+<!--<?import javafx.geometry.*?>-->
+<!--<?import javafx.scene.control.*?>-->
+<!--<?import java.lang.*?>-->
+<!--<?import javafx.scene.layout.*?>-->
+
+<!--<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" spacing="8.0"-->
+      <!--xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"-->
+      <!--fx:controller="app.controller.MainWindowController">-->
+
+    <!--<children>-->
+        <!--<Label fx:id="title">Admininstation Module</Label>-->
+        <!--<Button fx:id="btn1" mnemonicParsing="false" text="Add Users" onAction="#openAddUserForm"/>-->
+        <!--<Button fx:id="btn2" mnemonicParsing="false" text="Delete Users" onAction="#openDeleteUserForm"/>-->
+        <!--<Button fx:id="btn3" mnemonicParsing="false" text="Create Ballot" onAction="#createBallotForm"/>-->
+    <!--</children>-->
+
+    <!--<padding>-->
+        <!--<Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />-->
+    <!--</padding>-->
+<!--</VBox>-->
