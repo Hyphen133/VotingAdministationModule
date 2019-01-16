@@ -3,6 +3,7 @@ package app.services;
 import app.contracts.VoteManager;
 import app.domain.Ballot;
 import lombok.Data;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.web3j.abi.datatypes.Address;
 import org.web3j.abi.datatypes.Utf8String;
@@ -14,16 +15,19 @@ import org.web3j.protocol.core.methods.response.EthAccounts;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import org.web3j.protocol.http.HttpService;
 import org.web3j.tuples.generated.Tuple2;
+import org.web3j.tuples.generated.Tuple3;
 import org.web3j.tx.ClientTransactionManager;
 import org.web3j.tx.RawTransactionManager;
 import org.web3j.tx.TransactionManager;
 import org.web3j.tx.gas.DefaultGasProvider;
+import org.web3j.tx.gas.StaticGasProvider;
 import org.web3j.utils.Numeric;
 
 import java.io.IOException;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -33,26 +37,21 @@ public class BallotStartupServices {
 
     VoteManager voteManager;
 
-    public BallotStartupServices() {
-        //https://github.com/web3j/web3j/issues/332
-        Web3j web3j = Web3j.build(new HttpService("http://localhost:8545"));
-        String account = null;
-        try {
-            account = web3j.ethAccounts().send().getAccounts().get(0);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public BallotStartupServices(@Value("${blockchain.contract}")String contractAddress, @Value("${blockchain.address}") String blockchainAddress, @Value("${blockchain.account}") String account ) {
+        System.out.println(contractAddress);
+        System.out.println(blockchainAddress);
+        System.out.println(account);
+        Web3j web3j = Web3j.build(new HttpService(blockchainAddress));
 
-
-        Credentials credentials = Credentials.create(account);
-        TransactionManager transactionManager = new ClientTransactionManager(web3j, "");
-        voteManager = VoteManager.load("0x8b0295813d84bdeb33857780d323a742679e264e", web3j, new ClientTransactionManager(web3j,"0xb59994635608b2f2e816d77522635e56f14e0312"), new DefaultGasProvider() );
-
+        TransactionManager transactionManager = new ClientTransactionManager(web3j, account);
+        voteManager = VoteManager.load(contractAddress, web3j, new ClientTransactionManager(web3j,account),new DefaultGasProvider() );
 
 
     }
 
     public void startTimerForBallot(Ballot ballot) {
+        BigInteger nextIndex = BigInteger.ZERO;
+
         System.out.println("Started Timer");
         BallotTimer timer = new BallotTimer(this, ballot);
         timer.start();
@@ -61,26 +60,38 @@ public class BallotStartupServices {
 
     public void startBallot(Ballot ballot) {
         try {
-            RemoteCall<TransactionReceipt> call = voteManager.createBallot(ballot.getParticipants().getCandidates().stream().map(x -> stringToBytes32(x.getName())).collect(Collectors.toList()),
+            BigInteger nextIndex = BigInteger.ZERO;
+            try{
+                while(true){
+                    Tuple3<byte[], Boolean, BigInteger> tmp = voteManager.ballots(nextIndex).send();
+                    if(tmp == null){
+                        break;
+                    }
+                    nextIndex = nextIndex.add(BigInteger.ONE);
+//                    System.out.println(nextIndex);
+                }
+            }catch (Exception e){
+                System.out.println("Found id");
+            }
+
+            System.out.println("Index:" + nextIndex);
+
+            ballot.setId(nextIndex);
+
+            RemoteCall<TransactionReceipt> call = voteManager.createBallot(stringToBytes32(ballot.getName()),ballot.getParticipants().getCandidates().stream().map(x -> stringToBytes32(x.getName())).collect(Collectors.toList()),
                     ballot.getParticipants().getUsers().stream().map(x -> BigInteger.valueOf(x.getId())).collect(Collectors.toList()));
             call.send();
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-
-//        RemoteCall<BigInteger> lastBallotId = voteManager.lastBallotIndex();
-//
-//        try {
-//            ballot.setId(lastBallotId.send().intValue());
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-
     }
 
     public void endBallot(Ballot ballot) {
-        voteManager.endBallot(BigInteger.valueOf(ballot.getId()));
+        try {
+            voteManager.endBallot(ballot.getId()).send();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 

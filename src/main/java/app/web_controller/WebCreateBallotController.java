@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -81,7 +82,7 @@ public class WebCreateBallotController {
 
         BallotParticipants participants = new BallotParticipants(users, candidates);
 
-        Ballot ballot = new Ballot(1, "Sample Ballot", participants, startDate, endDate);
+        Ballot ballot = new Ballot(BigInteger.ZERO, "Sample Ballot", participants, startDate, endDate);
 
         return ballot;
 
@@ -89,7 +90,7 @@ public class WebCreateBallotController {
 
     public Ballot toBallot(BallotDto dto) {
         Ballot ballot = new Ballot();
-        ballot.setId(dto.id);
+        ballot.setId(BigInteger.ZERO);
         ballot.setName(dto.name);
         ballot.setStartDate(dto.startDate);
         ballot.setEndDate(dto.endDate);

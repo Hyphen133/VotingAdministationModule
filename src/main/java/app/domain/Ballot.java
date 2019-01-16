@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.Date;
 
@@ -12,7 +13,7 @@ import java.util.Date;
 @AllArgsConstructor
 //@NoArgsConstructor
 public class Ballot {
-    int id;
+    BigInteger id;
     String name;
     BallotParticipants participants;
     LocalDateTime startDate;
